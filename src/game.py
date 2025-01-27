@@ -4,12 +4,12 @@ from player import Player
 
 class Game:
     def __init__(self, player1: str, player2: str):
-        self.board : list = []
+        self.board: [Hole] = []
         # create a board associating letters to their hole
         for i, letter in enumerate("ABCDEF"):
             self.board.append(Hole(letter=letter, index=i, player_name=player1))
-        for i, letter in enumerate("GHIJKL"):
-            self.board.append(Hole(letter=letter, index=i + 6, player_name=player2))
+        for i, letter in enumerate("LKJIHG"):
+            self.board.append(Hole(letter=letter, index=6 + i, player_name=player2))
         self.player_1 = Player(player1)
         self.player_2 = Player(player2)
         self.current_player = self.player_1
@@ -23,8 +23,8 @@ class Game:
     def display_board(self)-> str:
         player1_hole_letters: str = "  ".join([hole.letter for hole in self.board[:6]])
         player1_holes: str = "".join([f"({hole.nb_of_seeds})" for hole in self.board[:6]])
-        player2_holes: str = "".join([f"({hole.nb_of_seeds})" for hole in self.board[6:]])
-        player2_hole_letters: str = "  ".join([hole.letter for hole in self.board[6:]])
+        player2_holes: str = "".join([f"({hole.nb_of_seeds})" for hole in reversed(self.board[6:])])
+        player2_hole_letters: str = "  ".join([hole.letter for hole in reversed(self.board[6:])])
         scores: str = f"scores: P1: {self.player_1.get_score()} - P2: {self.player_2.get_score()}"
 
         board = (
@@ -37,6 +37,11 @@ class Game:
         )
         return board
 
+    def return_next_hole(self):
+        if self.current_hole == 11:
+            return 0
+        else:
+            return self.current_hole + 1
 
     def saw_seeds(self):
         # the nb of seeds will determine the length of the for loop
@@ -45,8 +50,9 @@ class Game:
         self.board[self.current_hole].nb_of_seeds = 0
         #  now the for loop will add 1 seed to each next hole until there isn't any seed left
         for x in range(nb_of_seeds):
-            self.board[self.current_hole + 1].nb_of_seeds += 1
-            self.current_hole += 1
+            next_hole = self.return_next_hole()
+            self.board[next_hole].nb_of_seeds += 1
+            self.current_hole = next_hole
 
     def harvest_seeds(self):
         # checking if the current hole has 2 or 3 seeds
@@ -65,13 +71,17 @@ class Game:
         else:
             self.current_player = self.player_1
 
-    def get_input(self) -> int:
+    def get_input(self) -> int :
         print(self.display_board())
         # asking the current player which hole they want to retrieve seeds from
-        str_input: str = input(f"{self.current_player.name} : Choose a starting hole")
-        # converting the string input into an integer
-        int_input: int = int(str_input)
-        return int_input
+        str_input: str = input(f"{self.current_player.name} : Choose a starting hole: ")
+        # looking for the corresponding index to the chosen letter
+        for hole in self.board:
+            if hole.letter == str_input:
+                return hole.index
+        print("Invalid input. Please try again.")
+        return self.get_input()
+
 
     def gameplay(self):
         while True:
@@ -84,5 +94,5 @@ class Game:
             # switching players
             self.change_player()
 
-# @todo : fix rotation when saw seed and harvest seed (player sides)
+# @todo : fix not allowed to choose letters not on your side
 # @todo : add winning condition

@@ -7,6 +7,9 @@ class Hole:
         self.index: int = index
         self.owner: Player = Player(player_name)
 
+    def __str__(self):
+        return f"nb = {self.nb_of_seeds}, letter = {self.letter}, index = {self.index}, owner = {self.owner}"
+
 
 
 

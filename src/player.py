@@ -4,6 +4,9 @@ class Player:
         self.name = name
         self.score = 0
 
+    def __str__(self):
+        return f"name: {self.name}, score: {self.score}"
+
 
     def get_score(self)-> int:
         return self.score
