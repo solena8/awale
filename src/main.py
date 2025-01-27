@@ -1,5 +1,5 @@
-from board import Board
+from game import Game
 
-new_board = Board("so", "sam")
+new_game = Game("so", "sam")
 
-print(new_board.display_board())
+new_game.gameplay()
