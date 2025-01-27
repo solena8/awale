@@ -5,10 +5,10 @@ class Hole:
         self.nb_of_seeds: int = 4
         self.letter: str = letter
         self.index: int = index
-        self.owner: Player = Player(player_name)
+        self.player_name = player_name
 
     def __str__(self):
-        return f"nb = {self.nb_of_seeds}, letter = {self.letter}, index = {self.index}, owner = {self.owner}"
+        return f"nb = {self.nb_of_seeds}, letter = {self.letter}, index = {self.index}, owner = {self.player_name}"
 
 
 
